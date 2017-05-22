@@ -43,6 +43,10 @@
     }
 </script>
 <style scoped>
+    .title{
+      font-size:1.3em;
+      line-height:100%;
+    }
     .timeBox{
         height:2rem;
         margin-bottom:.5rem;

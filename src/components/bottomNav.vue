@@ -18,5 +18,10 @@
 
     .bar{
         padding-top:.8rem;
+        text-align:center;
+    }
+    .router-link-active{
+        color:red;
+        border-bottom:2px solid rgb(28, 12, 41);
     }
 </style>

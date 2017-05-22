@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-17 12:09:12
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-05-18 19:24:00
+* @Last Modified time: 2017-05-22 10:03:39
 */
 function picker(id,val){
    $(id).picker({
@@ -27,7 +27,25 @@ function CallbackMove(){
     $('#Return').click();
   },5000);
 }
+//登录验证
+function isvalid(_this,name,paswd){
+  if(name,paswd){
+    return true;
+  }else if(!name){
+    _this.errmsg="用户名不能为空 !";
+    return false;
+  }else{
+    _this.errmsg="";
+  } ;
+  if(!paswd){
+    _this.errmsg2="密码不能为空 !";
+    return false;
+  }else{
+    _this.errmsg2="";
+  }
+};
 export {
     picker,
-    CallbackMove
+    CallbackMove,
+    isvalid
 }

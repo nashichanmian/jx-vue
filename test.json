@@ -9,14 +9,8 @@
     "msg": ""
   },
   "GetZP": {
-    "code": 1,
-    "data": {
-      "text1": "个人安全绩效自评1",
-      "number1": 99,
-      "text2": "个人自评",
-      "number2": 88
-    },
-    "msg": ""
+    "param[account]": "undefined",
+    "param[password_sha]": "9adcb29710e807607b683f62e555c22dc5659713"
   },
   "PostZP": {
     "id": "Usid",
