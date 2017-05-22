@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-22 15:42:33
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-05-22 15:54:38
+* @Last Modified time: 2017-05-22 17:40:16
 */
 
 import Vue from 'vue'
@@ -11,7 +11,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 //Vuex配置
-const store = new Vuex.Store({
+export default new Vuex.Store({
     state: {
         domain:'url',//保存后台请求的地址
         userInfo:{
@@ -25,9 +25,8 @@ const store = new Vuex.Store({
         updateUserInfo(state,newUserInfo){
             state.userInfo = newUserInfo;
         }
-    }
+    },
 })
-
 //设置cookie,增加到vue实例 方便全局调用
 Vue.prototype.setCookie = (c_name,value,expiredays) =>{
     var exdate = new Date();
@@ -38,7 +37,10 @@ Vue.prototype.setCookie = (c_name,value,expiredays) =>{
 function getCookie(name){
     var arr,reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
     if(arr = document.cookie.match(reg))
+    {
+        console.log(arr);
         return (arr[2]);
+    }
     else
         return null;
 }

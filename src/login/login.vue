@@ -7,11 +7,11 @@
           </section>
           <section class="User">
               <span class="name-icon"></span>
-              <input type="text" placeholder="请输入用户名" v-model="usname">
+              <input type="text" name="usname" placeholder="请输入用户名" v-model="usname">
               <span class="errmsg">{{errmsg}}</span><!-- 错误信息 -->
               <br>
               <span class="pasd-icon"></span>
-              <input type="password" placeholder="请输入密码" v-model="paswd" />
+              <input type="password" name="password" placeholder="请输入密码" v-model="paswd" />
               <span class="errmsg errmsg2">{{errmsg2}}</span><!-- 错误信息 -->
               <input type="button" name="submit" id="submit" value="登录" @click="submit">
               <loading v-if="isLogin" marginTop="-30%"></loading>
@@ -51,7 +51,7 @@ export default{
             let password_sha = hex_sha1(hex_sha1( this.paswd ));
 
             let loginParam = {
-              account: this.account,
+              account: this.usname,
               password_sha
             };
             this.isLogin = true ;//设置登录状态
