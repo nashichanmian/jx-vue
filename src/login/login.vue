@@ -42,8 +42,7 @@ export default{
         submit:function(){//登录逻辑
             let _this = this;
             if(isvalid(_this,_this.usname,_this.paswd)){
-                console.log('提交请求');
-                this.toLogin();
+                  this.toLogin();
             }
         },
         toLogin(){//登录请求
@@ -54,20 +53,25 @@ export default{
               account: this.usname,
               password_sha
             };
+
             this.isLogin = true ;//设置登录状态
 
             this.$http.post('/api/GetZP',{
               param : loginParam
             }).then((response) =>{
-              console.log("qingiu")
-              // if(response.data.code == 1){//如果登录成功则保存登录状态并设置有效期
+             //如果登录成功则保存登录状态并设置有效期
+                console.log(response)
                 let expireDays = 1000 * 60 * 60 * 24 * 15;
-                this.setCookie('session',response.data.session,expireDays);
+                this.setCookie('cookie','session',expireDays);
                 //跳转
-                this.$router.push('/home')
-              // }
+                let _this = this;
+                console.log("跳home")
+                setTimeout(function(){
+                  _this.$router.push('/home');
+                },2000);
+
             },(response) =>{
-              //Error
+              console.log(response);
             });
         }
     },

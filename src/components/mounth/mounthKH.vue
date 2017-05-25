@@ -28,7 +28,6 @@
             this.$http.get('/api/res').then((response) => {
                 if(response.data.code == 1){
                   this.Time = response.data.data;
-                  console.log(response.data.data);
                 }
             },error => {
 
@@ -36,7 +35,7 @@
         },
         methods:{
             loadMore(){
-                console.log(this.Time.length)
+                console.log()
             }
         },
 

@@ -9,8 +9,8 @@
     "msg": ""
   },
   "GetZP": {
-    "param[account]": " ",
-    "param[password_sha]": "16660298b207c5bd7ae9ff53b25446469935b0ea"
+    "param[account]": "123",
+    "param[password_sha]": "9adcb29710e807607b683f62e555c22dc5659713"
   },
   "PostZP": {
     "id": "Usid",

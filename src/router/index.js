@@ -19,6 +19,57 @@ export default new Router({
       component:Login
     },
     {
+      path:'/',
+      meta:{
+        requiresAuth: true
+      },
+      component:Home,
+      children:[
+        {
+          path: '/',
+          component: mounthKH
+        },
+        {
+          path: '/mounthKH',
+          component: mounthKH
+        },
+        {
+          path: '/Mlist',
+          component: Mlist,
+          children:[
+            {
+              path: '/',
+              component: Mdetail
+            },
+            {
+              path: '/Mdetail',
+              component: Mdetail
+            }
+          ]
+        },
+        {
+          path: '/input',
+          component: Input
+        },
+        {
+          path: '/checkList',
+          component: CheckList
+        },
+        {
+          path: '/H1KH',
+          component: H1KH
+        },
+        {
+          path: '/yearKH',
+          component: yearKH
+        },
+        {
+          path: '/MyJX',
+          component: MyJX
+        }
+      ]
+    },
+    {
       path:'/home',
       meta:{
         requiresAuth: true

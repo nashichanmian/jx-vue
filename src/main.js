@@ -6,12 +6,10 @@ import router from './router'
 import VueResource from 'vue-resource'
 import Vuex from 'vuex'
 import store from './store/'
-console.log(store);
 Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.http.options.emulateHTTP = true;
 Vue.http.options.emulateJSON = true;
-
 
 /* eslint-disable no-new */
 new Vue({
@@ -30,13 +28,12 @@ new Vue({
   },
   methods:{
     checkLogin(){
-        //检查是否存在session
-        if(!this.getCookie('session')){
-            this.$router.push('/login');
-        }else{
-            this.$router.push('/home');
+        //检查是否存在cookie
+        if(!this.getCookie('cookie')){
+             this.$router.push('/login');
         }
     }
   }
 
 })
+

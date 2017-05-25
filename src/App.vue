@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import {mapGetters,mapActions} from 'vuex'
 export default {
   data(){
     return{
@@ -29,7 +28,7 @@ export default {
       this.$http.get('/api/GetZP',{
           "params" : this.userInfo
         }).then((response) => {
-          console.log('获取用户信息')
+          console.log(this.userInfo)
           //success
           if(response.data.code == 0){
             this.$store.commit('updateUserInfo',this.userInfo)

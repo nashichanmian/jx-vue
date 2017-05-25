@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-22 15:42:33
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-05-22 17:40:16
+* @Last Modified time: 2017-05-24 01:04:54
 */
 
 import Vue from 'vue'
@@ -13,12 +13,11 @@ Vue.use(Vuex)
 //Vuex配置
 export default new Vuex.Store({
     state: {
-        domain:'url',//保存后台请求的地址
+        domain:'http://172.23.197.1/jxkh/m/service.do?method=userLoginByDingDing&teleNum=%22111%22',//保存后台请求的地址
         userInfo:{
             //保存用户信息
-            nick:null,
+            uid:null,
             ulevel:null,
-            uid:null
         }
     },
     mutations: {
