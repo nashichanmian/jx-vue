@@ -35,7 +35,7 @@ $(document).ready(function () {
                         'biz.util.openLink'] //必填，需要使用的jsapi列表
                 });
 
-                function aa () {
+                function ready () {
                         console.log('dd.ready rocks!');
                         dd.runtime.info({
                             onSuccess: function (info) {
@@ -60,8 +60,10 @@ $(document).ready(function () {
                                         "code" : Window.authcode
                                     },
                                     success : function(data){
-                                        var info = JSON.parse(data);
-                                        alert(info);
+                                        if(data.code == 1){
+                                            var dduserinfo = data;
+
+                                        }
                                     },
                                     error : function (err){
                                         alert(err);
@@ -75,7 +77,7 @@ $(document).ready(function () {
                         });
                     }
 
-               dd.ready(aa());
+               dd.ready(ready());
             })
 
     });

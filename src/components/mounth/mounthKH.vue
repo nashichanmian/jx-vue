@@ -35,7 +35,7 @@
         },
         methods:{
             loadMore(){
-                console.log()
+
             }
         },
 

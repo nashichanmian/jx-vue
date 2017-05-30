@@ -6,14 +6,16 @@
              <h1 class='title'>乌鲁木齐铁路局</h1>
           </section>
           <section class="User">
-              <span class="name-icon"></span>
-              <input type="text" name="usname" placeholder="请输入用户名" v-model="usname">
-              <span class="errmsg">{{errmsg}}</span><!-- 错误信息 -->
-              <br>
-              <span class="pasd-icon"></span>
-              <input type="password" name="password" placeholder="请输入密码" v-model="paswd" />
-              <span class="errmsg errmsg2">{{errmsg2}}</span><!-- 错误信息 -->
-              <input type="button" name="submit" id="submit" value="登录" @click="submit">
+              <div id="position">
+                <span class="name-icon"></span>
+                <input type="text" name="usname" placeholder="请输入用户名" v-model="usname">
+                <span class="errmsg">{{errmsg}}</span><!-- 错误信息 -->
+                <br>
+                <span class="pasd-icon"></span>
+                <input type="password" name="password" placeholder="请输入密码" v-model="password" />
+                <span class="errmsg errmsg2">{{errmsg2}}</span><!-- 错误信息 -->
+                <input type="button" name="submit" id="submit" value="登录" @click="submit">
+              </div>
               <loading v-if="isLogin" marginTop="-30%"></loading>
           </section>
         </div>
@@ -22,7 +24,7 @@
 
 
 <script>
-import {isvalid} from '../../static/index.js'
+import {isvalid,loading} from '../../static/index.js'
 import Loading from '@/components/Loading'
 import {hex_sha1} from '../../static/sha.min.js'
 export default{
@@ -30,48 +32,58 @@ export default{
         return{
             isLogin: false,
             usname:'',
-            paswd:'',
+            password:'',
             errmsg:'',
-            errmsg2:''
+            errmsg2:'',
+            userInfo:{
+              //保存用户信息
+              userName:null,
+              ddId:null,
+              roleLevel:null,
+            }
         }
     },
     components:{
       Loading
     },
     methods:{
-        submit:function(){//登录逻辑
+        submit(){//登录逻辑
             let _this = this;
-            if(isvalid(_this,_this.usname,_this.paswd)){
+            if(isvalid(_this,_this.usname,_this.password)){
                   this.toLogin();
             }
         },
         toLogin(){//登录请求
-            //加密规则 哈希算法
-            let password_sha = hex_sha1(hex_sha1( this.paswd ));
+          this.isLogin = true ;//设置登录状态
+            //加密规则 哈希
+            // let password_sha = hex_sha1(hex_sha1( this.paswd ));
 
-            let loginParam = {
+            //http
+            this.$http.post('http://172.23.197.1/jxkh/m/service.do?method=userLogin',{
               account: this.usname,
-              password_sha
-            };
-
-            this.isLogin = true ;//设置登录状态
-
-            this.$http.post('/api/GetZP',{
-              param : loginParam
+              password: this.password
             }).then((response) =>{
              //如果登录成功则保存登录状态并设置有效期
-                console.log(response)
-                let expireDays = 1000 * 60 * 60 * 24 * 15;
-                this.setCookie('cookie','session',expireDays);
-                //跳转
-                let _this = this;
+                if(response.body.code == 1){
+                  console.log(response.body)
+                  this.userInfo.ddId = response.body.data.ddId;
+                  this.userInfo.userName = response.body.data.userName;
+                  this.userInfo.roleLevel = response.body.data.roleLevel;
+                  this.$store.commit('updateUserInfo',this.userInfo);
+                  let expireDays = 1000 * 60 * 60 * 24 * 15;
+                  this.setCookie('ddId',this.userInfo.ddId,expireDays);
+                  //跳转
+                  let _this = this;
                 console.log("跳home")
                 setTimeout(function(){
                   _this.$router.push('/home');
                 },2000);
-
+              }else{
+                alert("登录失败");
+              }
             },(response) =>{
-              console.log(response);
+              console.log("请求失败");
+                  this.isLogin = false;
             });
         }
     },
@@ -82,7 +94,6 @@ export default{
 <style scoped>
     .bar{
         margin:0;
-        top: .8rem;
         position:absolute;
         background:rgb(248, 79, 11);
     }
@@ -97,7 +108,7 @@ export default{
     }
     .User{
         text-align:center;
-        position:absolute;
+        position:fixed;
         padding:0;
         margin:0;
         width:100%;

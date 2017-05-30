@@ -10,6 +10,7 @@ import H1KH from '@/components/H1/H1KH'
 import yearKH from '@/components/year/yearKH'
 import MyJX from '@/components/myjx/MyJX'
 import Login from '@/login/login'
+import Register from '@/login/register'
 Vue.use(Router)
 
 export default new Router({
@@ -19,54 +20,20 @@ export default new Router({
       component:Login
     },
     {
+      path:'/register',
+      component: Register
+    },
+    {
       path:'/',
       meta:{
         requiresAuth: true
       },
-      component:Home,
+      component:Mdetail,
       children:[
         {
           path: '/',
           component: mounthKH
         },
-        {
-          path: '/mounthKH',
-          component: mounthKH
-        },
-        {
-          path: '/Mlist',
-          component: Mlist,
-          children:[
-            {
-              path: '/',
-              component: Mdetail
-            },
-            {
-              path: '/Mdetail',
-              component: Mdetail
-            }
-          ]
-        },
-        {
-          path: '/input',
-          component: Input
-        },
-        {
-          path: '/checkList',
-          component: CheckList
-        },
-        {
-          path: '/H1KH',
-          component: H1KH
-        },
-        {
-          path: '/yearKH',
-          component: yearKH
-        },
-        {
-          path: '/MyJX',
-          component: MyJX
-        }
       ]
     },
     {

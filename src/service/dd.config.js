@@ -1,36 +1,11 @@
-<template>
-  <div id="app">
-    <router-view ></router-view>
-     <loading v-if="isLogin" marginTop="-30%"></loading>
-  </div>
-</template>
-
-<script>
-import Loading from '@/components/Loading'
-import register from '@/login/register'
-export default {
-  data(){
-    return{
-      isLogin:false,
-      userInfo:{
-        //保存用户信息
-        userName:null,
-        ddId:null,
-        roleLevel:null,
-      }
-    }
-  },
-  components:{
-    Loading
-  },
-  mounted(){
-    //组件开始挂在时获取用户信息
-    this.ddConfig();
-  },
-  methods:{
-    //获取钉钉免登及userinfo
-    ddConfig(){
-        this.isLogin = true ;//设置登录状态
+/*
+* @Author: Marte
+* @Date:   2017-05-25 17:45:17
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-05-25 17:47:40
+*/
+function ddConfig{
+    $(document).ready(function () {
         var url = 'http://172.23.197.1/jxkh';
         console.log("url", url);
         var corpId = "dinga64936c15a0df28935c2f4657eb6378f";  // 企业的corpId
@@ -38,6 +13,7 @@ export default {
         var nonceStr = "";
         var timeStamp = "";
         var agentId = "";
+
         $.post(
             'http://172.23.197.1/jxkh/m/service.do?method=getDingCode',
             {
@@ -83,33 +59,21 @@ export default {
                             corpId: corpId, //企业id
                             onSuccess: function (info) {
                                 console.log('authcode' + info.code);
+                              alert('authcode = '+info.code);
                                 Window.authcode = info.code;   //免登授权码
-                                $.post('http://172.23.197.1/jxkh/m/service.do?method=getUserInfo',
-                                {
-                                    "code" : Window.authcode
-                                },function(response){
-                                    alert("连接成功"+response.body.code);
-                                    alert(response.code);
-                                    if(response.body.code ==1){
-                                        this.isLogin = true ;//设置登录状态
-                                        this.userInfo.ddId = response.body.data.ddId;
-                                        this.userInfo.userName = response.body.data.userName;
-                                        this.userInfo.roleLevel = response.body.data.roleLevel;
-                                        this.$store.commit('updateUserInfo',this.userInfo);
-                                        alert(this.userInfo);
-                                        let expireDays = 1000 * 60 * 60 * 24 * 15;
-                                        this.setCookie('ddId',this.userInfo.ddId,expireDays);
-                                        let _this = this;
-                                        alert("将跳转到home")
-                                        console.log("跳home")
-                                        setTimeout(function(){
-                                          _this.$router.push('/input');
-                                        },2000);
-                                    }else if(response.body.data){
-                                        _this.$router.push('/register');
-                                    }else{
-                                        alert("请求失败");
-                                        this.isLogin = false ;//设置登录状态
+                                $.ajax({
+                                    url : '/jxkh/m/service.do?method=getUserInfo',
+                                    data: {
+                                        "code" : Window.authcode
+                                    },
+                                    success : function(data){
+                                        if(data.code == 1){
+                                            var dduserinfo = data;
+
+                                        }
+                                    },
+                                    error : function (err){
+                                        alert(err);
                                     }
                                 });
                             },
@@ -119,20 +83,7 @@ export default {
                             }
                         });
                     }
+
         dd.ready(ready());
     })
-    }
-
-  },
-
 }
-</script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-}
-</style>

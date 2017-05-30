@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-17 12:09:12
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-05-22 10:03:39
+* @Last Modified time: 2017-05-30 22:29:42
 */
 function picker(id,val){
    $(id).picker({
@@ -29,9 +29,12 @@ function CallbackMove(){
 }
 //登录验证
 function isvalid(_this,name,paswd){
-  if(name,paswd){
+  if(name && paswd){
+    _this.errmsg ='';
+    _this.errmsg2 = '';
     return true;
-  }else if(!name){
+  }
+  if(!name){
     _this.errmsg="用户名不能为空 !";
     return false;
   }else{
@@ -44,8 +47,40 @@ function isvalid(_this,name,paswd){
     _this.errmsg2="";
   }
 };
+function register(_this,ddid,paswd,teleNum,username){
+  if(ddid &&paswd && teleNum && username){
+    _this.errmsg ='';
+    return true;
+  };
+  if(!ddid){
+    _this.errmsg="钉钉ID不能为空 !";
+    return false;
+  }else{
+    _this.errmsg="";
+  } ;
+  if(!paswd){
+    _this.errmsg="密码不能为空 !";
+    return false;
+  }else{
+    _this.errmsg2="";
+  };
+  if(!teleNum){
+    _this.errmsg="电话号码不能为空 !";
+    return false;
+  }else{
+    _this.errmsg3="";
+  };
+  if(!username){
+    _this.errmsg="请输入您的姓名 !";
+    return false;
+  }else{
+    _this.errmsg="";
+  };
+}
+
 export {
     picker,
     CallbackMove,
-    isvalid
+    isvalid,
+    register
 }

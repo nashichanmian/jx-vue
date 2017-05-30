@@ -2,6 +2,7 @@
     <div>
         <router-view></router-view>
         <BottomNav></BottomNav>
+        <h1></h1>
     </div>
 </template>
 
