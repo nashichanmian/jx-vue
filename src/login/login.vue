@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="Bgimg">
-        <img src="../assets/xiao.jpg" height="670" width="375" alt="">
-         <section class="bar bar-nav">
+         <section id="bar">
              <h1 class='title'>乌鲁木齐铁路局</h1>
           </section>
+          <img src="../assets/xiao.jpg" height="690" width="375" >
           <section class="User">
               <div id="position">
                 <span class="name-icon"></span>
@@ -59,7 +59,7 @@ export default{
             // let password_sha = hex_sha1(hex_sha1( this.paswd ));
 
             //http
-            this.$http.post('http://172.23.197.1/jxkh/m/service.do?method=userLogin',{
+            this.$http.post('/jxkh/m/service.do?method=userLogin',{
               account: this.usname,
               password: this.password
             }).then((response) =>{
@@ -71,7 +71,9 @@ export default{
                   this.userInfo.roleLevel = response.body.data.roleLevel;
                   this.$store.commit('updateUserInfo',this.userInfo);
                   let expireDays = 1000 * 60 * 60 * 24 * 15;
-                  this.setCookie('ddId',this.userInfo.ddId,expireDays);
+                  var userInfo = JSON.stringify(this.userInfo);
+                  this.setCookie('userInfo',userInfo,expireDays);
+
                   //跳转
                   let _this = this;
                 console.log("跳home")
@@ -80,6 +82,7 @@ export default{
                 },2000);
               }else{
                 alert("登录失败");
+                this.isLogin=false;
               }
             },(response) =>{
               console.log("请求失败");
@@ -92,14 +95,15 @@ export default{
 </script>
 
 <style scoped>
-    .bar{
-        margin:0;
-        position:absolute;
+    #bar{
+        width: 100%;
+        height:2rem;
+        text-align:center;
         background:rgb(248, 79, 11);
     }
     .title{
         color:#fff;
-        line-height:100%;
+        line-height:2rem;
     }
     img{
         position:absolute;
@@ -113,6 +117,11 @@ export default{
         margin:0;
         width:100%;
         bottom:10rem;
+    }
+    @media screen and (max-width: 320px) {
+    .User{
+        bottom:6rem;
+        }
     }
     .User input{
         padding:0;

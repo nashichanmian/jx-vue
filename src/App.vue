@@ -28,9 +28,10 @@ export default {
     this.ddConfig();
   },
   methods:{
+
     //获取钉钉免登及userinfo
     ddConfig(){
-        this.isLogin = true ;//设置登录状态
+        var _this = this;
         var url = 'http://172.23.197.1/jxkh';
         console.log("url", url);
         var corpId = "dinga64936c15a0df28935c2f4657eb6378f";  // 企业的corpId
@@ -39,7 +40,7 @@ export default {
         var timeStamp = "";
         var agentId = "";
         $.post(
-            'http://172.23.197.1/jxkh/m/service.do?method=getDingCode',
+            '/jxkh/m/service.do?method=getDingCode',
             {
                 "url": url,
                 "corpId": corpId
@@ -82,40 +83,34 @@ export default {
                         dd.runtime.permission.requestAuthCode({
                             corpId: corpId, //企业id
                             onSuccess: function (info) {
-                                console.log('authcode' + info.code);
-                                Window.authcode = info.code;   //免登授权码
-                                $.post('http://172.23.197.1/jxkh/m/service.do?method=getUserInfo',
-                                {
-                                    "code" : Window.authcode
-                                },function(response){
-                                    alert("连接成功"+response.body.code);
-                                    alert(response.code);
-                                    if(response.body.code ==1){
-                                        this.isLogin = true ;//设置登录状态
-                                        this.userInfo.ddId = response.body.data.ddId;
-                                        this.userInfo.userName = response.body.data.userName;
-                                        this.userInfo.roleLevel = response.body.data.roleLevel;
-                                        this.$store.commit('updateUserInfo',this.userInfo);
-                                        alert(this.userInfo);
-                                        let expireDays = 1000 * 60 * 60 * 24 * 15;
-                                        this.setCookie('ddId',this.userInfo.ddId,expireDays);
-                                        let _this = this;
-                                        alert("将跳转到home")
-                                        console.log("跳home")
-                                        setTimeout(function(){
-                                          _this.$router.push('/input');
-                                        },2000);
-                                    }else if(response.body.data){
-                                        _this.$router.push('/register');
-                                    }else{
-                                        alert("请求失败");
-                                        this.isLogin = false ;//设置登录状态
+                                 $.ajax({
+                                    url: '/jxkh/m/service.do?method=getUserInfo',
+                                    type:"POST",
+                                    data: {"code":info.code},
+                                    success: function (data) {
+                                        if(data.code ==1){
+                                          _this.userInfo.ddId = data.data.ddId;
+                                          _this.userInfo.userName = data.data.userName;
+                                          _this.userInfo.roleLevel = data.data.roleLevel;
+                                          _this.$store.commit('updateUserInfo',_this.userInfo);
+                                          let expireDays = 1000 * 60 * 60 * 24 * 15;
+                                          _this.setCookie('ddId',_this.userInfo.ddId,expireDays);
+                                          alert("用户信息保存成功"+_this.userInfo.userName)
+                                        }else if(data.code == 0 && data.data){
+                                             _this.$router.push('/register');
+                                        }else{
+                                            alert(data.msg);
+                                        }
+                                    },
+                                    error: function (data) {
+                                        alert(2);
+                                        alert(data);
                                     }
                                 });
                             },
                             onFail: function (err) {
                                 console.log('requestAuthCode fail: ' + JSON.stringify(err));
-//                                alert(JSON.stringify(err));
+                                alert(JSON.stringify(err));
                             }
                         });
                     }

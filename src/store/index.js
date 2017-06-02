@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-22 15:42:33
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-05-26 18:01:35
+* @Last Modified time: 2017-06-01 16:45:23
 */
 
 import Vue from 'vue'
@@ -38,8 +38,9 @@ function getCookie(name){
     var arr,reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
     if(arr = document.cookie.match(reg))
     {
-        console.log(arr)
-        return (arr[2]);
+        var arr = JSON.parse(unescape(arr[2]));
+        console.log(arr);
+        return arr;
     }
     else
         return null;

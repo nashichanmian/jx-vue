@@ -3,12 +3,13 @@ import Router from 'vue-router'
 import Home from '@/components/home'
 import mounthKH from '@/components/mounth/mounthKH'
 import Mlist from '@/components/mounth/Mlist'
-import Mdetail from '@/components/mounth/Mdetail'
 import Input from '@/components/mounth/input'
 import CheckList from '@/components/mounth/checkList'
 import H1KH from '@/components/H1/H1KH'
 import yearKH from '@/components/year/yearKH'
 import MyJX from '@/components/myjx/MyJX'
+import FGlist from '@/components/FGresearch/FGlist'
+import Alllist from '@/components/Allresearch/Alllist'
 import Login from '@/login/login'
 import Register from '@/login/register'
 Vue.use(Router)
@@ -28,7 +29,7 @@ export default new Router({
       meta:{
         requiresAuth: true
       },
-      component:Mdetail,
+      component:Home,
       children:[
         {
           path: '/',
@@ -54,16 +55,6 @@ export default new Router({
         {
           path: '/Mlist',
           component: Mlist,
-          children:[
-            {
-              path: '/',
-              component: Mdetail
-            },
-            {
-              path: '/Mdetail',
-              component: Mdetail
-            }
-          ]
         },
         {
           path: '/input',
@@ -84,6 +75,16 @@ export default new Router({
         {
           path: '/MyJX',
           component: MyJX
+        },
+        //分管领导
+        {
+          path:'/FGlist',
+          component:FGlist
+        },
+        //主任
+        {
+          path:'/Alllist',
+          component:Alllist
         }
       ]
     }
