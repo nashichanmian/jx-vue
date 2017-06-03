@@ -32,7 +32,7 @@ export default {
     //获取钉钉免登及userinfo
     ddConfig(){
         var _this = this;
-        var url = 'http://172.23.197.1/jxkh';
+        var url = 'http://114.115.142.167/jxkh';
         console.log("url", url);
         var corpId = "dinga64936c15a0df28935c2f4657eb6378f";  // 企业的corpId
         var signature = "";
@@ -88,13 +88,16 @@ export default {
                                     type:"POST",
                                     data: {"code":info.code},
                                     success: function (data) {
+                                        alert("请求成功");
                                         if(data.code ==1){
+                                          alert("data=1");
                                           _this.userInfo.ddId = data.data.ddId;
                                           _this.userInfo.userName = data.data.userName;
                                           _this.userInfo.roleLevel = data.data.roleLevel;
                                           _this.$store.commit('updateUserInfo',_this.userInfo);
                                           let expireDays = 1000 * 60 * 60 * 24 * 15;
-                                          _this.setCookie('ddId',_this.userInfo.ddId,expireDays);
+                                          var userInfo = JSON.stringify(_this.userInfo);
+                                          _this.setCookie('userInfo',userInfo,expireDays);
                                           alert("用户信息保存成功"+_this.userInfo.userName)
                                         }else if(data.code == 0 && data.data){
                                              _this.$router.push('/register');

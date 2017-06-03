@@ -112,7 +112,7 @@ export default{
     }
     .User{
         text-align:center;
-        position:fixed;
+        position:absolute;
         padding:0;
         margin:0;
         width:100%;

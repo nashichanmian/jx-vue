@@ -24,15 +24,15 @@ new Vue({
   },
   //进入页面时
   created(){
-      this.checkLogin();
+    // this.checkLogin();
   },
   methods:{
-    checkLogin(){
-        //检查是否存在cookie
-        if(!this.getCookie('userInfo')){
-             this.$router.push('/login');
-        }
-    }
+    // checkLogin(){
+    //     //检查是否存在cookie
+    //     if(!this.getCookie('userInfo')){
+    //          this.$router.push('/login');
+    //     }
+    // }
   }
 
 })

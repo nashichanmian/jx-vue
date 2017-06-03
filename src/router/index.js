@@ -5,6 +5,7 @@ import mounthKH from '@/components/mounth/mounthKH'
 import Mlist from '@/components/mounth/Mlist'
 import Input from '@/components/mounth/input'
 import CheckList from '@/components/mounth/checkList'
+import KZbmkh from '@/components/mounth/KZ-bmkh'
 import H1KH from '@/components/H1/H1KH'
 import yearKH from '@/components/year/yearKH'
 import MyJX from '@/components/myjx/MyJX'
@@ -54,7 +55,11 @@ export default new Router({
         },
         {
           path: '/Mlist',
-          component: Mlist,
+          component: Mlist
+        },
+        {
+          path: '/KZ-bmkh',
+          component:KZbmkh
         },
         {
           path: '/input',

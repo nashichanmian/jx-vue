@@ -14,8 +14,8 @@ export default{
     data(){
         return{
             FG:false,
-            MY:true,
-            ALL:false
+            MY:false,
+            ALL:true
         }
     },
     mounted(){

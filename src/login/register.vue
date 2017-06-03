@@ -120,7 +120,7 @@ export default{
       },
       toRegister(){
         var _this = this;
-        this.$http.post('jxkh/m/service.do?method=register',{
+        this.$http.post('/jxkh/m/service.do?method=register',{
           userPwd:this.userPwd,
           teleNum:this.teleNum,
           userName:this.userName
