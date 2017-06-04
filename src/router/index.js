@@ -6,6 +6,10 @@ import Mlist from '@/components/mounth/Mlist'
 import Input from '@/components/mounth/input'
 import CheckList from '@/components/mounth/checkList'
 import KZbmkh from '@/components/mounth/KZ-bmkh'
+import ZRcheckList from '@/components/mounth/ZRcheckList'
+import rorLevel0 from '@/components/mounth/rorLevel0'
+import rorLevel1 from '@/components/mounth/rorLevel1'
+import KZ01 from '@/components/mounth/KZ01'
 import H1KH from '@/components/H1/H1KH'
 import yearKH from '@/components/year/yearKH'
 import MyJX from '@/components/myjx/MyJX'
@@ -51,7 +55,7 @@ export default new Router({
         },
         {
           path: '/mounthKH',
-          component: mounthKH
+          component: mounthKH,
         },
         {
           path: '/Mlist',
@@ -68,6 +72,22 @@ export default new Router({
         {
           path: '/checkList',
           component: CheckList
+        },
+        {
+          path: '/ZRcheckList',
+          component: ZRcheckList
+        },
+        {
+          path: '/rorLevel0',
+          component: rorLevel0
+        },
+        {
+          path: '/rorLevel1',
+          component: rorLevel1
+        },
+        {
+          path : '/KZ01',
+          component: KZ01
         },
         {
           path: '/H1KH',

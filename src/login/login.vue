@@ -59,7 +59,7 @@ export default{
             // let password_sha = hex_sha1(hex_sha1( this.paswd ));
 
             //http
-            this.$http.post('/jxkh/m/service.do?method=userLogin',{
+            this.$http.post('http://114.115.142.167:8080/jxkh/m/service.do?method=userLogin',{
               account: this.usname,
               password: this.password
             }).then((response) =>{

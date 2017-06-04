@@ -10,7 +10,7 @@
               <div class="time"  @click="Mlist">{{item}}</div>
               </div>
               <div class="col-50 timeBox">
-                  <span id="more" class="time" @click="loadMore">加载更多</span>
+                  <span id="more" class="time">加载更多</span>
               </div>
             </div>
           </div>
@@ -24,63 +24,79 @@
             <router-link class="Bmkh" to="KZ-bmkh">部门考核</router-link>
             </div>
             <div class="zt"><!-- 状态 -->
-              <span style="color:red">{{MlistX}}</span>
+              <span class="zt1" style="color:red">{{MlistX}}</span>
               <span style="color:#ccc;marginLeft:33%">{{Bmkh}}</span>
             </div>
         </div>
     </div>
 </template>
 <script>
+    import {mapGetters, mapActions} from 'vuex'
     export default{
         data(){
             return{
                 list:[],
                 limit:10,
                 page:1,
-                isShow: false, //科长弹出框的显示隐藏
                 MlistX:'未完成',//科长弹出框-个人自评的状态
                 Bmkh:'已完成'// 部门考核的状态
             }
         },
         mounted(){
-            this.$http.get('api/res').then((response) => {
+            this.$http.get('/api/res').then((response) => {
+                  console.log(response);
                 if(response.body.code == 1){
-                  // var userInfo = this.getCookie('userInfo');
-                  // console.log(userInfo.userName);
+
+                  var userInfo = this.getCookie('userInfo');
+                  console.log(userInfo);
                   this.list = response.body.data;
                   console.log(response.body.data)
                 }
             },error => {
+              alert("连接失败");
             });
         },
+        computed:mapGetters([
+            'isShow'
+          ]),
+        methods:mapActions([
+            'Mlist',
+            'Clicknone'
+          ]),
         methods:{
-            loadMore(){
+            Mlist(){
+              var userInfo = this.getCookie('userInfo');
+              if(userInfo.roleLevel == 1){
+                this.$router.push('/Mlist');
+              }else if(userInfo.roleLevel == 3){ //副主任级别判断跳转
+                this.$router.push('/ZRcheckList');
+              }else if(userInfo.roleLevel == 4){//主任级别判断跳转
+                this.$router.push('/KZ01');
+              };
+              this.$store.commit('Mlist')
+            },
+            Clicknone(){
+              this.$store.commit('Clicknone')
+            }
+        }
+        // methods:{
+        //     loadMore(){
+        //     },
+        //     getlist(){
 
-            },
-            getlist(){
+        //       this.$http.get('api/list',{
+        //         'id' : "ydkh"//月度考核
+        //       }).then((response) => {
+        //         if(response.body.code ==1){
+        //           this.list = response.body.data//返回的是数组
+        //         }else{
+        //           console.log(response.msg);
+        //         }
+        //       },(response) => {
+        //         alert(response);
+        //       })
+        //     },
 
-              this.$http.get('api/list',{
-                'id' : "ydkh"//月度考核
-              }).then((response) => {
-                if(response.body.code ==1){
-                  this.list = response.body.data//返回的是数组
-                }else{
-                  console.log(response.msg);
-                }
-              },(response) => {
-                alert(response);
-              })
-            },
-            Mlist(){//判断进入人员的级别
-              // let userInfo = this.getCookie('userInfo');
-              // if(userInfo.roleLevel == 1){
-                this.isShow = true;
-              // }
-            },
-            Clicknone(){//弹出框显示隐藏
-                this.isShow = false;
-              }
-          }
     }
 </script>
 <style scoped>
@@ -148,6 +164,7 @@
       font-weight:700;
       color:#fff;
       float:left;
+      margin-top:-2rem;
     }
     .Mlist{
       margin-right:1rem;
@@ -157,9 +174,14 @@
       color:rgb(208, 0, 0);
       margin-left:15%;
     }
+    .zt1{
+      margin-left:.2rem;
+    }
     @media screen and (max-width: 320px) {
       .Mlist, .Bmkh{
         width: 5rem;
+        margin-top:0;
       }
+
     }
 </style>

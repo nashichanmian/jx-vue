@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-22 15:42:33
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-06-01 16:45:23
+* @Last Modified time: 2017-06-04 03:14:55
 */
 
 import Vue from 'vue'
@@ -11,6 +11,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 //Vuex配置
+import actions from './actions'
+import mutations from './mutations'
 export default new Vuex.Store({
     state: {
 
@@ -26,7 +28,11 @@ export default new Vuex.Store({
             state.userInfo = newUserInfo;
         }
     },
-})
+    actions,
+    modules:{
+        mutations
+    }
+});
 //设置cookie,增加到vue实例 方便全局调用
 Vue.prototype.setCookie = (c_name,value,expiredays) =>{
     var exdate = new Date();
@@ -55,5 +61,7 @@ Vue.prototype.getCookie = getCookie;
 //     if (cval != null)
 //       document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
 // }
-
+export {
+    getCookie
+}
 

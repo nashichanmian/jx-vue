@@ -1,9 +1,7 @@
 <template>
     <div id="input">
         <div>
-            <router-link to="Mlist" id="Return">
-                <span class="return">&nbsp;&nbsp;<<返回</span>
-            </router-link>
+                <span class="return" onclick="window.history.go(-1)">&nbsp;&nbsp;<<返回</span>
         </div>
         <div class="box1">
             <span class="jx">个人安全绩效:</span>
@@ -16,7 +14,6 @@
             <input class="nubInput" type="number" v-model="message2" min="" max="100" />
         </div>
         <div class="content-Btn">
-                <button class="Btn1" @click="PostZP">修改</button>
                 <button class="Btn2" @click="PostZP">提交</button>
         </div>
     </div>
@@ -101,7 +98,7 @@
         margin-top:3rem;
 
     }
-    .Btn1, .Btn2{
+    .Btn2{
         width:6rem;
         height:2rem;
         background:rgb(0, 173, 248);
@@ -110,7 +107,5 @@
         color:#fff;
         font-weight:700;
     }
-    .Btn1{
-        margin-right:1rem;
-    }
+
 </style>

@@ -45,16 +45,16 @@
                 <li class="item-content" style="border-bottom:1px solid rgb(243,244,245);">
                   <div class="item-media"></div>
                   <div class="item-inner">
-                  <div class="item-title">{{roleLevelName.name1}}</div>
+                  <div class="item-title">分管主任</div>
                   <div class="item-after">{{zp.text3}}</div>
                   <div class="item-after">{{zp.number3}}</div>
                   </div>
                 </li>
                 </router-link>
-                <li class="item-content">
+                <li class="item-content" @click="toRouter3">
                   <div class="item-media"></div>
                   <div class="item-inner">
-                  <div class="item-title">{{roleLevelName.name2}}</div>
+                  <div class="item-title">主任评价</div>
                   <div class="item-after">{{zp.text4}}</div>
                   <div class="item-after">{{zp.number4}}</div>
                   </div>
@@ -94,16 +94,9 @@ export default{
          }
       },error => {
     }),
-      this.roleLevelNameFc();
       this.totalScores();
   },
-  computed:mapGetters([
-      'roleLevelName',
-  ]),
   methods:{
-      roleLevelNameFc(){
-        this.$store.commit('roleLevelNameFC');
-      },
       totalScores(){
         if(this.zp.number1 && this.zp.number2 && this.zp.number3 && this.zp.number4){
             let number1 = parseInt(this.zp.number1);
@@ -114,6 +107,9 @@ export default{
         }else{
           this.zp.totalScores = '';
         }
+      },
+      toRouter3(){
+          this.$router.push('/checkList')
       }
   }
 }

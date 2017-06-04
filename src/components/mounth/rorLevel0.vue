@@ -45,7 +45,7 @@
                 <li class="item-content" style="border-bottom:1px solid rgb(243,244,245);">
                   <div class="item-media"></div>
                   <div class="item-inner">
-                  <div class="item-title">{{roleLevelName.name1}}</div>
+                  <div class="item-title">科长评价</div>
                   <div class="item-after">{{zp.text3}}</div>
                   <div class="item-after">{{zp.number3}}</div>
                   </div>
@@ -54,7 +54,7 @@
                 <li class="item-content">
                   <div class="item-media"></div>
                   <div class="item-inner">
-                  <div class="item-title">{{roleLevelName.name2}}</div>
+                  <div class="item-title">分管主任</div>
                   <div class="item-after">{{zp.text4}}</div>
                   <div class="item-after">{{zp.number4}}</div>
                   </div>
@@ -74,13 +74,13 @@ export default{
       //自评
        zp : {
         text1:'状态良好',
-        number1:'99',
+        number1:'44',
         text2:'状态良好',
-        number2:'99',
+        number2:'33',
         text3:'未评',
-        number3:'88',
+        number3:'22',
         text4:'未评价',
-        number4:'44',
+        number4:'11',
         totalScores:''
       }
     }
@@ -94,16 +94,9 @@ export default{
          }
       },error => {
     }),
-      this.roleLevelNameFc();
       this.totalScores();
   },
-  computed:mapGetters([
-      'roleLevelName',
-  ]),
   methods:{
-      roleLevelNameFc(){
-        this.$store.commit('roleLevelNameFC');
-      },
       totalScores(){
         if(this.zp.number1 && this.zp.number2 && this.zp.number3 && this.zp.number4){
             let number1 = parseInt(this.zp.number1);

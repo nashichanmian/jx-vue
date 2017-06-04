@@ -32,7 +32,7 @@ export default {
     //获取钉钉免登及userinfo
     ddConfig(){
         var _this = this;
-        var url = 'http://114.115.142.167/jxkh';
+        var url = window.location.href;
         console.log("url", url);
         var corpId = "dinga64936c15a0df28935c2f4657eb6378f";  // 企业的corpId
         var signature = "";
