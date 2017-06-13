@@ -1,15 +1,25 @@
 <template>
-    <div id="KZ01">
+    <div id="ZRcheckList">
         <div>
                 <span class="return" onclick="window.history.go(-1)">&nbsp;&nbsp;<<返回</span>
         </div>
+
         <div class="Box">
-            <span>单位:</span>
-            <input type="text" id='picke' class="pickerCS" value="科长"/>
-            <span style="marginLeft:1rem;">部门:</span>
-            <input type="text" id='pickerAtb' class="pickerCS" value="综合科"/>
-            <button id="Btn_res" type="button">查询</button>
+            <section class="select selectLeft">
+                 <span>单位:</span>
+                 <select name="province" id="province" @change="getAtbArr">
+                        <option>选择单位</option>
+                        <option v-for="(list,index) in getval.unitName">{{list}}</option>
+                 </select>
+            </section>
+            <section class="select selectRight">
+                <span>部门:</span>
+                <select name="city" class="city">
+                    <option>选择部门</option>
+                </select>
+            </section>
         </div>
+         <button id="Btn_res" class="button button-fill" @click="serch">查询</button>
         <div class="contentRQ">
           <div class="list-block">
             <ul>
@@ -22,79 +32,85 @@
                   <div class="item-title">得分</div>
                 </div>
               </li>
-              <li class="item-content" @click='toRouter2'>
+              <li class="item-content" @click='toRouter5' v-for="(item,index) in getXSlist">
                 <div class="item-media"><i class="icon icon-f7"></i></div>
                 <div class="item-inner" id="Atblist">
-                  <div class="item-after">张三</div>
-                  <div class="item-after jibie">科长</div>
-                  <div class="item-after">综合部</div>
-                  <div class="item-after">99</div>
-                </div>
-              </li>
-                            <li class="item-content" @click='toRouter2'>
-                <div class="item-media"><i class="icon icon-f7"></i></div>
-                <div class="item-inner" id="Atblist">
-                  <div class="item-after">张三</div>
-                  <div class="item-after jibie">科长</div>
-                  <div class="item-after">综合部</div>
-                  <div class="item-after">99</div>
+                  <div class="after">{{item.userName}}</div>
+                  <div class="after jibie" :bId="item.bId" :orName="item.orName" :step="item.Step">{{item.roleName}}</div>
+                  <div class="after">{{item.orName}}</div>
+                  <div class="after">{{item.Score}}</div>
                 </div>
               </li>
             </ul>
           </div>
         </div>
+
+
+
     </div>
 </template>
 <script>
-import {picker} from '../../../static/index.js'
+import {mapGetters} from 'vuex'
     export default{
         data(){
             return{
-                val:['档案室','财务科'],
-                AtbArr:['全部'],
+                disp:true,
+                val:[
+                    {
+                        unitName:[],
+                        unitId:[]
+                    }
+                ],
+                AtbArr:[],
+                unId:'',
+                deId:'',
             }
         },
         mounted(){
-            picker('#picke',this.val);
-            picker('#pickerAtb',this.AtbArr);
-            this.getVal();
+            this.$store.dispatch('getval');
         },
-        watch:{
-           val:{
-            handler:function(val,oldval){
-                    getAtbArr();
-               },
-             deep:true
-            }
-        },
+        computed:mapGetters([
+            'getval',
+            'getXSlist'
+        ]),
         methods: {
-            getVal(){
-                this.$http.get('/jxkh/jxkh/opkaoherules.do?method=getRulesTypeList').then((response) =>{
-                    if(response.body.data ==1){
-                        this.val = response.body.data
-                    }else{
-                        alert(response.body.msg)
-                    }
-                },(response) =>{
-
-                })
-            },
             getAtbArr(){
-                this.$get('/jxkh/jxkh/opkaoherules.do?method=getRulesComentList&ruleType=A',{
-                    ruleType : $('#picke').value
+                let arr=[];
+                let valIndex = $('#province').val();//获取单位input的value，查询在数组中出现的位置，获取下表然后通过下标比较unitId的数组同位置的值就是需要的unitId;
+                this.unId = this.getval.unitId[this.getval.unitName.indexOf(valIndex)];
+                this.$http.post('http://114.115.142.167:8080/jxkh/m/service.do?method=getDepartmentListByUnit',{
+                    unitId:this.unId
                 }).then((response) =>{
-                    if(response.body.data ==1){
-                        this.val = response.body.data
-                    }else{
-                        alert(response.body.msg)
+                    if(response.body.code ==1){
+                         let data2 = response.body.data;
+                         for(var i=0;i<data2.length;i++){
+                             arr.push(data2[i].deptName);
+                         }
+                        console.log(arr);
+                        let sltCity = $('.city');
+                        $(".city option").remove();//每次选择都清空城市列表
+                        //遍历根据省份下标与之对应的城市下标
+                        for(var j=0;j<arr.length;j++){
+                            sltCity.append("<option>"+arr[j]+"</option>");
+                        }
                     }
-                },(response) =>{
-                    alert("请求失败")
                 })
             },
-            toRouter2(){
-                    this.$router.push('/rorLevel1')
-            }
+            serch(){
+                this.$store.dispatch("getXSlist");
+            },
+            toRouter5(){
+              var role = this.getEventTrigger(event).getElementsByTagName("div")[1].getElementsByTagName("div")[1].innerHTML;//用户级别传给mlist页面用于判断并渲染上级评价的名称
+              var BID = this.getEventTrigger(event).getElementsByTagName("div")[1].getElementsByTagName("div")[1].getAttribute('bId');
+              this.$store.commit('BID',BID);
+              this.$store.commit('roleLevel',role);
+              this.$router.push('/rorlevel0');
+            },
+            getEventTrigger(event)
+              { //获取当前点击的元素的innerhtml用于判断人员级别
+                 var x=event.currentTarget;
+                 return x;
+              }
         }
     }
 </script>
@@ -109,17 +125,22 @@ import {picker} from '../../../static/index.js'
         color:#fff;
         font-weight:700;
     }
-    .pickerCS{
-        width:2.2rem;
-        height:1.2rem;
-        text-align:center;
-        background:#cdd;
-        font-size:.8rem;
-        font-weight:700;
+    .select{
+        float:left;
+        color:rgb(0, 173, 248);
+        margin:0;
+        padding:0;
+    }
+
+    #Btn_res{
+        color:#fff;
+        width:3rem;
+        margin-top:2rem;
     }
     .Box{
-        margin-top:2rem;
-        margin-left:1rem;
+        margin-top:1.5rem;
+        margin-left:1.6rem;
+
     }
     .contentRQ{
         width:90%;
@@ -179,6 +200,15 @@ import {picker} from '../../../static/index.js'
         text-align:center;
         margin-top:3rem;
     }
+    .after{
+      min-width:4rem;
+      text-align:left;
+      color:rgb(131, 132, 133);
+      margin-left:.2rem;
+    }
+    .after:nth-child(3){
+      margin-left:.8rem;
+    }
 @media screen and (max-width: 320px) {
      .return{
         height:2rem;
@@ -186,11 +216,18 @@ import {picker} from '../../../static/index.js'
      }
      .Box{
         margin-left:1rem;
-        font-size:14px;
+        font-size:15px;
+
      }
-     .pickerCS{
-        height:1rem;
-     }
+    .after{
+      min-width:3.8rem;
+      text-align:left;
+      color:rgb(131, 132, 133);
+      margin-left:0;
+    }
+    .after:nth-child(3){
+      margin-left:0;
+    }
 
 }
 </style>

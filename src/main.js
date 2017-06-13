@@ -10,9 +10,13 @@ Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.http.options.emulateHTTP = true;
 Vue.http.options.emulateJSON = true;
-
 /* eslint-disable no-new */
-new Vue({
+Vue.filter("toMinus", function(value){
+    if(value){
+      return '-'+value;
+    }
+});
+var vm = new Vue({
   el: '#app',
   router,
   store,
@@ -20,7 +24,12 @@ new Vue({
   template: '<App/>',
   components: { App },
   watch:{//监听路由检查登录
-    "$route" :'checkLogin'
+    // "$route" :'checkLogin'
+    $route(to,from){
+      if(to.path != '/register'){
+        this.checkLogin();
+      }
+    }
   },
   //进入页面时
   created(){

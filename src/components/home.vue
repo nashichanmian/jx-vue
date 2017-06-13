@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-view></router-view>
+        <router-view id="gd"></router-view>
         <BottomNav></BottomNav>
         <h1></h1>
     </div>
@@ -14,3 +14,6 @@ components:{
   }
 }
 </script>
+<style>
+
+</style>

@@ -14,16 +14,24 @@ export default {
       isLogin:false,
       userInfo:{
         //保存用户信息
-        userName:null,
         ddId:null,
+        teleNum:null,
+        userName:null,
+        roleId:null,
+        organizationId:null,
+        leaderFirstId:null,
+        leaderSecondId:null,
+        specialTag:null,
         roleLevel:null,
+        specialTagRole:null,
+        inOrganizer:null
       }
     }
   },
   components:{
     Loading
   },
-  mounted(){
+  created(){
     //组件开始挂在时获取用户信息
     this.ddConfig();
   },
@@ -32,15 +40,15 @@ export default {
     //获取钉钉免登及userinfo
     ddConfig(){
         var _this = this;
-        var url = window.location.href;
+        var url = 'http://114.115.142.167:8080/jxkh/';
         console.log("url", url);
         var corpId = "dinga64936c15a0df28935c2f4657eb6378f";  // 企业的corpId
         var signature = "";
         var nonceStr = "";
         var timeStamp = "";
         var agentId = "";
-        $.post(
-            '/jxkh/m/service.do?method=getDingCode',
+        $.get(
+            'http://114.115.142.167:8080/jxkh/m/service.do?method=getDingCode',
             {
                 "url": url,
                 "corpId": corpId
@@ -68,48 +76,41 @@ export default {
                 });
 
                 function ready () {
-                        console.log('dd.ready rocks!');
                         dd.runtime.info({
                             onSuccess: function (info) {
                                 console.log('runtime info: ' + JSON.stringify(info));
-//                                alert(JSON.stringify(info));
                             },
                             onFail: function (err) {
                                 console.log('fail: ' + JSON.stringify(err));
-//                                alert(JSON.stringify(err));
+                               alert(JSON.stringify(err));
                             }
                         });
-
                         dd.runtime.permission.requestAuthCode({
                             corpId: corpId, //企业id
                             onSuccess: function (info) {
-                                 $.ajax({
-                                    url: '/jxkh/m/service.do?method=getUserInfo',
-                                    type:"POST",
-                                    data: {"code":info.code},
-                                    success: function (data) {
-                                        alert("请求成功");
+                                 $.get('http://114.115.142.167:8080/jxkh/m/service.do?method=getUserInfo',
+                                    {
+                                      "code":info.code
+                                    },
+                                   function (data) {
                                         if(data.code ==1){
-                                          alert("data=1");
-                                          _this.userInfo.ddId = data.data.ddId;
-                                          _this.userInfo.userName = data.data.userName;
-                                          _this.userInfo.roleLevel = data.data.roleLevel;
+                                          _this.userInfo = data.data;
                                           _this.$store.commit('updateUserInfo',_this.userInfo);
-                                          let expireDays = 1000 * 60 * 60 * 24 * 15;
+                                          let expireDays = 1000 * 60 * 60;
                                           var userInfo = JSON.stringify(_this.userInfo);
                                           _this.setCookie('userInfo',userInfo,expireDays);
-                                          alert("用户信息保存成功"+_this.userInfo.userName)
-                                        }else if(data.code == 0 && data.data){
-                                             _this.$router.push('/register');
+                                          $.toast("欢迎您"+_this.userInfo.userName, 2000, 'success top');
+                                          setTimeout(()=>{_this.$router.push('/home')},2000);
+                                        };
+                                        if(data.code == 0 && data.data.ddId){
+                                          $.toast("您尚未注册，将自动为您跳转至注册页面", 2000, 'success top');
+                                          setTimeout(()=>{_this.$router.push('/register')},2000);
+                                             _this.$store.commit('ddid',data.data.ddId);
                                         }else{
                                             alert(data.msg);
                                         }
-                                    },
-                                    error: function (data) {
-                                        alert(2);
-                                        alert(data);
                                     }
-                                });
+                                );
                             },
                             onFail: function (err) {
                                 console.log('requestAuthCode fail: ' + JSON.stringify(err));
@@ -117,7 +118,7 @@ export default {
                             }
                         });
                     }
-        dd.ready(ready());
+            dd.ready(ready());
     })
     }
 

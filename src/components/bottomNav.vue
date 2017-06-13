@@ -23,7 +23,22 @@ export default{
     },
     methods:{
         getOrg(){
-
+            var userInfo = this.getCookie('userInfo');
+            if(userInfo.roleLevel == 1 || userInfo.roleLevel == 2){
+                this.MY = true;
+                this.FG = false;
+                this.ALL = false;
+            }else{};
+            if(userInfo.roleId == 4){
+                this.MY = false;
+                this.FG = true;
+                this.ALL = false;
+            }else{};
+            if(userInfo.roleId == 5){
+                this.MY = false;
+                this.FG = false;
+                this.ALL = true;
+            }else{};
         }
     }
 }

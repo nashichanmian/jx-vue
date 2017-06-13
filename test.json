@@ -18,5 +18,13 @@
     "id": "Usid",
     "text1": "undefined",
     "text2": "1"
+  },
+  "aa":{
+    "code":1,
+    "data":[
+      {"kid":"123","userName":"asd","roleName":"co","superiorsScore":"ok"},
+      {"kid":"345","userName":"qwe","roleName":"coasd","superiorsScore":"oasdk"},
+      {"kid":"112323","userName":"afggdfsd","roleName":"cghfgo","superiorsScore":"o123k"}
+    ]
   }
 }

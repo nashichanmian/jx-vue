@@ -37,11 +37,23 @@ export default{
             errmsg2:'',
             userInfo:{
               //保存用户信息
-              userName:null,
               ddId:null,
-              roleLevel:null,
+              teleNum:null,
+              userName:null,
+              roleId:null,
+              organizationId:null,
+              leaderFirstId:null,
+              leaderSecondId:null,
+              specialTag:null,
+              specialTagRole:null,
+              inOrganizer:null
             }
         }
+    },
+    created(){
+      if(this.getCookie("userInfo")){
+        this.$router.push('/home');
+      }
     },
     components:{
       Loading
@@ -66,22 +78,21 @@ export default{
              //如果登录成功则保存登录状态并设置有效期
                 if(response.body.code == 1){
                   console.log(response.body)
-                  this.userInfo.ddId = response.body.data.ddId;
-                  this.userInfo.userName = response.body.data.userName;
-                  this.userInfo.roleLevel = response.body.data.roleLevel;
+                  this.userInfo = response.body.data;
                   this.$store.commit('updateUserInfo',this.userInfo);
                   let expireDays = 1000 * 60 * 60 * 24 * 15;
                   var userInfo = JSON.stringify(this.userInfo);
                   this.setCookie('userInfo',userInfo,expireDays);
-
+                  this.setCookie('ddId',this.userInfo.ddId,expireDays);
                   //跳转
                   let _this = this;
-                console.log("跳home")
                 setTimeout(function(){
                   _this.$router.push('/home');
+                  this.isLogin=false;
                 },2000);
               }else{
                 alert("登录失败");
+                this.errmsg=response.body.msg;
                 this.isLogin=false;
               }
             },(response) =>{

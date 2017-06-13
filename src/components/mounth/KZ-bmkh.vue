@@ -2,9 +2,9 @@
 <div>
     <div id="bmkh">
         <div>
-            <router-link to="mounthKH" id="Return">
+            <div onclick="window.history.go(-1)" id="Return">
                 <span class="return">&nbsp;&nbsp;<<返回</span>
-            </router-link>
+            </div>
         </div>
         </div>
         <div class="contentRQ">
@@ -18,12 +18,12 @@
                   <div class="item-title">得分</div>
                 </div>
               </li>
-              <li class="item-content" @click="toRouter4">
+              <li class="item-content" @click="toRouter4" v-for="(item,index) in getXSlist">
                 <div class="item-media"><i class="icon icon-f7"></i></div>
                 <div class="item-inner" id="Atblist">
-                  <div class="item-after">张三</div>
-                  <div class="item-after">科员</div>
-                  <div class="item-after">99</div>
+                  <div class="item-after">{{item.userName}}</div>
+                  <div class="item-after" :bId="item.bId" :orName="item.orName" :step="item.Step" style="margin-left:-.5rem">{{item.roleName}}</div>
+                  <div class="item-after">{{item.superiorsScore}}</div>
                 </div>
               </li>
             </ul>
@@ -33,11 +33,33 @@
 </div>
 </template>
 <script>
+    import {bus} from '../Util/bus.js'
+    import {mapGetters} from 'vuex'
     export default{
+        data(){
+          return {
+
+          }
+        },
+        mounted(){
+            this.$store.dispatch("getXSlist");//下属列表
+        },
+        computed:mapGetters([
+            'getXSlist'
+        ]),
         methods:{
             toRouter4(){
-                this.$router.push('/rorLevel0')
-            }
+              var role = this.getEventTrigger(event).getElementsByTagName("div")[1].getElementsByTagName("div")[1].innerHTML;//用户级别传给mlist页面用于判断并渲染上级评价的名称
+              var BID = this.getEventTrigger(event).getElementsByTagName("div")[1].getElementsByTagName("div")[1].getAttribute('bId');
+              this.$store.commit('BID',BID);
+              this.$store.commit('roleLevel',role);
+              this.$router.push('/rorlevel0')
+            },
+            getEventTrigger(event)
+              { //获取当前点击的元素的innerhtml用于判断人员级别
+                 var x=event.currentTarget;
+                 return x;
+              }
         }
     }
 </script>
@@ -75,4 +97,5 @@
     #Atbtitle .item-title:nth-child(3){
         margin-left:.6rem;
     }
+
 </style>

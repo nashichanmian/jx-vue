@@ -6,8 +6,8 @@
         <div class="content">
           <div class="content-padded grid-demo">
             <div class="row">
-              <div class="col-50 timeBox"  v-for="(item,index) in list" >
-              <div class="time"  @click="Mlist">{{item}}</div>
+              <div class="col-50 timeBox timearr"  v-for="(item,index) in timeList" >
+              <div class="time" @click="Mlist" :timeid="item.pid" :timestatus="item.planStatus">{{item.planDate}}</div>
               </div>
               <div class="col-50 timeBox">
                   <span id="more" class="time">加载更多</span>
@@ -35,71 +35,57 @@
     export default{
         data(){
             return{
-                list:[],
-                limit:10,
-                page:1,
                 MlistX:'未完成',//科长弹出框-个人自评的状态
                 Bmkh:'已完成'// 部门考核的状态
             }
         },
-        mounted(){
-            this.$http.get('/api/res').then((response) => {
-                  console.log(response);
-                if(response.body.code == 1){
-
-                  var userInfo = this.getCookie('userInfo');
-                  console.log(userInfo);
-                  this.list = response.body.data;
-                  console.log(response.body.data)
-                }
-            },error => {
-              alert("连接失败");
-            });
+        mounted(){//获取时间戳列表
+          this.getTimeList();
+        },
+        updated(){//判断是否已经完成考核
+            let timearr = $('.time');
+            for(var i=0;i<timearr.length;i++){
+              if(timearr[i].getAttribute('timestatus') == 1){
+                  timearr[i].classList.add('bgImg');
+              }
+            }
         },
         computed:mapGetters([
+            'timeList',
             'isShow'
           ]),
-        methods:mapActions([
-            'Mlist',
-            'Clicknone'
-          ]),
         methods:{
-            Mlist(){
+          ...mapActions([
+              'getTimeList'
+          ]),getEventTrigger(event) //获取当前点击的元素的innerhtml用于判断人员级别
+              {
+              var x=event.currentTarget;
+                  return x;
+              },
+             Mlist(){
               var userInfo = this.getCookie('userInfo');
-              if(userInfo.roleLevel == 1){
+              if(userInfo.roleId == 1 || userInfo.roleId == 2){
                 this.$router.push('/Mlist');
-              }else if(userInfo.roleLevel == 3){ //副主任级别判断跳转
+              }else if(userInfo.roleId == 4){ //副主任级别判断跳转
                 this.$router.push('/ZRcheckList');
-              }else if(userInfo.roleLevel == 4){//主任级别判断跳转
+              }else if(userInfo.roleId  == 5){//主任级别判断跳转
                 this.$router.push('/KZ01');
               };
-              this.$store.commit('Mlist')
+              var Id = this.getEventTrigger(event).getAttribute('timeid');
+              this.$store.commit('Mlist');
+              this.$store.commit('Emit',Id);//当前被点击的月份ID保存在state
+              setTimeout(
+                ()=>{this.Clicknone()},5000)
             },
             Clicknone(){
               this.$store.commit('Clicknone')
-            }
-        }
-        // methods:{
-        //     loadMore(){
-        //     },
-        //     getlist(){
-
-        //       this.$http.get('api/list',{
-        //         'id' : "ydkh"//月度考核
-        //       }).then((response) => {
-        //         if(response.body.code ==1){
-        //           this.list = response.body.data//返回的是数组
-        //         }else{
-        //           console.log(response.msg);
-        //         }
-        //       },(response) => {
-        //         alert(response);
-        //       })
-        //     },
+            },
+        },
 
     }
 </script>
 <style scoped>
+
     .bar{
       background:rgb(0, 173, 248);
       height:2.7rem;
@@ -120,13 +106,16 @@
       display:inline-block;
       line-height:4rem;
       width:6.5rem;
-      height:4rem;
+      height:3.7rem;
       background:rgb(0, 173, 248);
       border-radius:.4rem;
       margin-top:2rem;
       color:#fff;
       font-family:'微软雅黑';
       font-weight:700;
+    }
+    #timeStyle{
+
     }
     #more{
       color:#fff;
@@ -176,6 +165,11 @@
     }
     .zt1{
       margin-left:.2rem;
+    }
+    .bgImg{
+      background-image:url('../../assets/logo2.png');
+      background-repeat:no-repeat;
+      background-size:100%;
     }
     @media screen and (max-width: 320px) {
       .Mlist, .Bmkh{

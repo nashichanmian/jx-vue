@@ -1,7 +1,7 @@
 <template>
     <div id="register">
         <header class="bar bar-nav">
-          <h1 class='title'>注 册</h1>
+          <h1 class='title' style="line-height:2.7rem">注 册</h1>
         </header>
         <div class="content">
           <div class="list-block">
@@ -22,7 +22,7 @@
     <!-- phone -->
               <li>
                 <div class="item-content">
-                  <div class="item-media"><i class="icon icon-form-password"></i></div>
+                  <div class="item-media"><i class="icon icon-form-name"></i></div>
                   <div class="item-inner">
                     <div class="item-title label">手机号</div>
                     <div class="item-input">
@@ -43,17 +43,17 @@
                   </div>
                 </div>
               </li>
-              <li>
+<!--               <li>
                 <div class="item-content">
                   <div class="item-media"><i class="icon icon-form-name"></i></div>
                   <div class="item-inner">
                     <div class="item-title label">部门</div>
                     <div class="item-input">
-                      <input type="text" id='orgId' placeholder="请选择所属部门" v-model="organizationId"/>
+                      <input type="text" id='orgId' placeholder="请选择所属部门"/>
                     </div>
                   </div>
                 </div>
-              </li>
+              </li> -->
             </ul>
             <span class="errmsg">{{errmsg}}</span><!-- 错误信息 -->
           </div>
@@ -74,78 +74,88 @@ export default{
     data(){
       return{
           isLogin: false,
-          orgList:[''],
+          // orgList:[],
+          // orId:[],
           organizationId:'',
           userPwd:'',
           teleNum:'',
           userName:'',
           errmsg:'',
           userInfo:{
-            //保存用户信息
-            userName:null,
-            ddId:null,
-            roleLevel:null,
+              //保存用户信息
+              ddId:null,
+              teleNum:null,
+              userName:null,
+              roleId:null,
+              organizationId:null,
+              leaderFirstId:null,
+              leaderSecondId:null,
+              specialTag:null,
+              specialTagRole:null,
+              inOrganizer:null
           }
       }
     },
     mounted(){
-      this.getOrgList(),
-      picker('#orgId',this.orgList);
-    },
 
+    },
     components:{
       Loading
     },
     methods:{
-      getOrgList(){//http 获取字典
-        this.$http.get('/jxkh/m/service.do?method=getOrganizationList').then((response) =>{
-          var data = response.body.data;
-          var arr=[];
-          for(var i=0;i<data.length;i++){
-            arr.push(data[i].orname);
-          }
-          this.orgList = arr;//把字典赋值给数组
-          console.log(this.orgList)
-        },(response) =>{
-          console.log(response)
-        });
-      },
+      // getOrgList(){//http 获取字典
+      //   this.$http.get('http://114.115.142.167:8080/jxkh/m/service.do?method=getOrganizationList').then((response) =>{
+      //     let data = response.body.data;
+      //     console.log(response.body.data)
+      //     let arr=[];
+      //     let arr2=[];
+      //     for(var i=0;i<data.length;i++){
+      //       arr.push(data[i].orname);
+      //       // arr2.push(data[i].orid);
+      //     }
+      //     this.orgList = arr;//把字典赋值给数组
+      //     this.orId = arr2;
+      //     picker('#orgId',this.orgList);
+      //   },(response) =>{
+      //     console.log(response)
+      //   });
+      // },
       Submit(){
         let _this = this;
-        if(register(_this, _this.ddId, _this.userPwd, _this.teleNum, _this.userName)){
+        if(register(_this, _this.userPwd, _this.teleNum, _this.userName)){
             this.isLogin = true ;//设置登录状态
             this.toRegister();
         }
-
       },
       toRegister(){
-        var _this = this;
-        this.$http.post('/jxkh/m/service.do?method=register',{
+        // let oname = $('#orgId').val();//根据input value在数组的位置 提取ID
+        // var oid= this.orId[this.orgList.indexOf(oname)];
+        this.$http.post('http://114.115.142.167:8080/jxkh/m/service.do?method=register',{
           userPwd:this.userPwd,
           teleNum:this.teleNum,
-          userName:this.userName
+          userName:this.userName,
+          ddId:'zpxnHklxMg4tsoXp'
         }).then((response) => {
+            console.log(response.body)
              //如果注册成功则保存登录状态并设置有效期
             if(response.body.code == 1){
-                _this.userInfo.ddId = _this.ddId
-                _this.userInfo.userName = _this.userName;
-                _this.userInfo.roleLevel = response.data.roleLevel;
-                _this.$store.commit('updateUserInfo',_this.userInfo);
-                let expireDays = 1000 * 60 * 60 * 24 * 15;
-                _this.setCookie('ddId',_this.userInfo.ddId,expireDays);
-                alert("用户信息保存成功"+_this.userInfo.roleLevel);
-              //跳转
-              setTimeout(function(){
-                _this.$router.push('/home');
-              },2000);
+                  console.log(response.body)
+                  this.userInfo = response.body.data;
+                  this.$store.commit('updateUserInfo',this.userInfo);
+                  let expireDays = 1000 * 60 * 60;
+                  var userInfo = JSON.stringify(this.userInfo);
+                  this.setCookie('userInfo',userInfo,expireDays);
+                  //跳转
+                  this.$router.push('/home');
+                  this.isLogin=false;
             }else{
+              this.isLogin=false;
                 this.errmsg=response.body.msg;
-                this.isLogin = false;
               }
             },(response) =>{
               console.log("请求失败");
               setTimeout(function(){
-                _this.isLogin = false;
+                this.isLogin = false;
               },2000);
         })
       }
@@ -154,6 +164,15 @@ export default{
 </script>
 
 <style scoped>
+    .bar{
+      background:rgb(0, 173, 248);
+      height:2.7rem;
+    }
+    .title{
+      font-size:1.3em;
+      line-height:2.7rem;
+      color:#fff;
+    }
     .title{
       line-height:100%;
     }

@@ -8,7 +8,6 @@ import CheckList from '@/components/mounth/checkList'
 import KZbmkh from '@/components/mounth/KZ-bmkh'
 import ZRcheckList from '@/components/mounth/ZRcheckList'
 import rorLevel0 from '@/components/mounth/rorLevel0'
-import rorLevel1 from '@/components/mounth/rorLevel1'
 import KZ01 from '@/components/mounth/KZ01'
 import H1KH from '@/components/H1/H1KH'
 import yearKH from '@/components/year/yearKH'
@@ -17,6 +16,7 @@ import FGlist from '@/components/FGresearch/FGlist'
 import Alllist from '@/components/Allresearch/Alllist'
 import Login from '@/login/login'
 import Register from '@/login/register'
+
 Vue.use(Router)
 
 export default new Router({
@@ -31,16 +31,7 @@ export default new Router({
     },
     {
       path:'/',
-      meta:{
-        requiresAuth: true
-      },
-      component:Home,
-      children:[
-        {
-          path: '/',
-          component: mounthKH
-        },
-      ]
+      component:Login,
     },
     {
       path:'/home',
@@ -80,10 +71,6 @@ export default new Router({
         {
           path: '/rorLevel0',
           component: rorLevel0
-        },
-        {
-          path: '/rorLevel1',
-          component: rorLevel1
         },
         {
           path : '/KZ01',

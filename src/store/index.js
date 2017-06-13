@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-05-22 15:42:33
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-06-04 03:14:55
+* @Last Modified time: 2017-06-11 18:03:30
 */
 
 import Vue from 'vue'
@@ -14,20 +14,7 @@ Vue.use(Vuex)
 import actions from './actions'
 import mutations from './mutations'
 export default new Vuex.Store({
-    state: {
 
-        userInfo:{
-            //保存用户信息
-           userName:null,
-           ddId:null,
-           roleLevel:null,
-        }
-    },
-    mutations: {
-        updateUserInfo(state,newUserInfo){
-            state.userInfo = newUserInfo;
-        }
-    },
     actions,
     modules:{
         mutations
@@ -45,14 +32,23 @@ function getCookie(name){
     if(arr = document.cookie.match(reg))
     {
         var arr = JSON.parse(unescape(arr[2]));
-        console.log(arr);
         return arr;
+
+    }
+    else
+        return null;
+}
+function getCookieString(name){
+    var arr,reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+    if(arr = document.cookie.match(reg))
+    {
+        return arr[2];
     }
     else
         return null;
 }
 Vue.prototype.getCookie = getCookie;
-
+Vue.prototype.getCookieString = getCookieString;
 //删除cookie
 // Vue.prototype.delCookie =(name) => {
 //     var exp = new Date();
